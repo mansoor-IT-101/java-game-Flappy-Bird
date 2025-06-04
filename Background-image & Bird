@@ -1,0 +1,78 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class FlappyBird extends JPanel implements ActionListener, KeyListener {
+    int boardWidth = 360;
+    int boardHeight = 640;
+
+    // Images
+    Image backgroundImg;
+    Image birdImg;
+
+    // Bird dimensions and position
+    int birdX = boardWidth / 8;
+    int birdY = boardHeight / 2;
+    int birdWidth = 34;
+    int birdHeight = 24;
+
+    class Bird {
+        int x = birdX;
+        int y = birdY;
+        int width = birdWidth;
+        int height = birdHeight;
+        Image img;
+
+        Bird(Image img) {
+            this.img = img;
+        }
+    }
+
+    Bird bird;
+    double score = 0;
+    boolean gameOver = false;
+
+    Timer gameLoop;
+
+    public FlappyBird() {
+        setPreferredSize(new Dimension(boardWidth, boardHeight));
+        setFocusable(true);
+        addKeyListener(this);
+
+        // Load images
+        backgroundImg = new ImageIcon(getClass().getResource("/resources/flappybirdbg.png")).getImage();
+        birdImg = new ImageIcon(getClass().getResource("/resources/flappybird.png")).getImage();
+
+        bird = new Bird(birdImg);
+
+        gameLoop = new Timer(1000 / 60, this);
+        gameLoop.start();
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        draw(g);
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(backgroundImg, 0, 0, boardWidth, boardHeight, null);
+        g.drawImage(bird.img, bird.x, bird.y, bird.width, bird.height, null);
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Arial", Font.PLAIN, 32));
+        if (gameOver) {
+            g.drawString("Game Over: " + (int) score, 10, 35);
+        } else {
+            g.drawString(String.valueOf((int) score), 10, 35);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
+    }
+
+    @Override public void keyPressed(KeyEvent e) {}
+    @Override public void keyTyped(KeyEvent e) {}
+    @Override public void keyReleased(KeyEvent e) {}
+}
